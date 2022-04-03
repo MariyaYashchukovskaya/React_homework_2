@@ -1,0 +1,14 @@
+li{
+    border:1px dashed grey;
+    padding: 5px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+li:first-child{
+    display: none;
+}
+
+h3{
+    text-align: center;
+}

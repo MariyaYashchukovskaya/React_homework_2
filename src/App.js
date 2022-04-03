@@ -1,23 +1,89 @@
-import logo from './logo.svg';
+// import logo from './logo.svg';
+import React from "react";
+import { useState } from "react";
+import { Post } from "./components/Post/Post";
+import { MyButton } from "./components/UI/MyButton";
+import { MyInput } from "./components/UI/MyInput";
+
 import './App.css';
 
+
 function App() {
+
+  const [title,setTitle] = useState('')
+  const [message,setMessage] = useState('')
+  const [posts,setPosts]=useState([{id:Date.now()}])
+  const [validationErrorTitle,setValidationErrorTitle]=useState('true')
+  const [validationErrorMessage,setValidationErrorMessage]=useState('true')
+
+  const onChangeTitle =(event)=>{  
+    const { value } =event.target
+    if (value.length>=6 || value.length===0 ){      
+      setValidationErrorTitle('false')      
+    }else if (value.length<6){
+      setValidationErrorTitle('true')     
+    }
+    setTitle(value)  
+  }
+
+  const onChangeMessage =(event)=>{  
+    const { value } =event.target
+    if (value.length>=16 || value.length===0){      
+      setValidationErrorMessage('false')      
+    }else if (value.length<16){
+      setValidationErrorMessage('true')  
+    }
+    setMessage(value)
+  }
+
+  const onSubmitPost =(event)=>{
+    event.preventDefault()
+    if (validationErrorTitle==='true' 
+    && validationErrorMessage ==='true'
+    && title!==''
+    &&message!==''){
+
+      const post={
+        id: Date.now(),
+        title:title,
+        message:message
+      }
+    
+      setPosts([...posts, post])
+      setTitle('')  
+      setMessage('')
+    }     
+    
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div className="container">
+        <form noValidate>
+          <h2>Создайте свой пост</h2>
+          <label htmlFor="title">Заголовок поста</label>
+          <MyInput type="text"   
+          id="title"            
+          placeholder="Введите заголовок поста"
+          value= { title }
+          onChange={ onChangeTitle }/>
+          <span className={validationErrorTitle}>Колл-во символов от 1 до 5.</span>
+
+          <label htmlFor="message">Cообщение</label>
+          <MyInput type="text"
+          id="message"        
+          placeholder="Введите сообщение"
+          value= { message }
+          onChange={ onChangeMessage }/>
+          <span className={validationErrorMessage}>Колл-во символов от 1 до 15.</span>
+
+          <MyButton onClick={ onSubmitPost } type="submit">Добавить</MyButton>
+        </form>     
+        <ul>{posts.map((post) => (        
+          <Post key={ post.id } post={post}/>      
+        ))}
+        </ul> 
+      </div>            
     </div>
   );
 }
