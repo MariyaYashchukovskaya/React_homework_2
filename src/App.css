@@ -5,7 +5,7 @@
 }
 
 body{
-  background-color:rgba(245, 245, 220, 0.1);
+  background-color:rgb(180, 226, 241);
   font-family:Arial, Helvetica, sans-serif;
   color:rgb(60, 60, 60);
 }
@@ -16,31 +16,49 @@ body{
   margin: 0 auto;
 }
 
-form{
+.formCreate{
+  margin: 0 auto;
+  background-color: rgb(209, 187, 209);
   display: flex;
   flex-direction: column;
+  min-height: 200px;
+  max-width: 370px;
+  align-items: center;
   justify-content: space-between;
-  text-align: center;
-  min-height: 230px;
-  margin: 20px 10px 30px 10px;
   padding: 20px 30px;
-  background-color: rgba(221, 160, 221, 0.145);
   border-radius:10px;
+}
 
+.formCreate h1{
+font-size: 25px;
+text-align: center;
+}
+
+.sortPost{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sortPost p{
+  font-size: 14px;
+  padding-right: 10px;
+}
+
+.checkedMessage{
+  margin: 10px auto;
+  background-color: rgb(209, 187, 209);
+  text-align: center;
+  max-width: 370px;  
+  padding: 20px 30px;
+  border-radius:10px;
 }
 
 h2{
-  margin-bottom: 10px;  
+  text-align: center;
 }
-
 span{
   font-size: 14px;
-}
-
-ul{
-  background-color:whitesmoke;
-  list-style: none;
-  padding: 15px;
 }
 
 .true{

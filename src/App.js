@@ -1,89 +1,74 @@
-// import logo from './logo.svg';
 import React from "react";
 import { useState } from "react";
-import { Post } from "./components/Post/Post";
-import { MyButton } from "./components/UI/MyButton";
-import { MyInput } from "./components/UI/MyInput";
+import { Posts } from "./components/Posts/Posts";
+import { Form } from "./components/Form/Form";
+import { Select } from "./components/Select/Select";
+import { Modal } from "./components/Modal/Modal"
+
 
 import './App.css';
+import { MyButton } from "./components/UI/MyButton";
 
+function App() {   
+  const [posts, setPosts]=useState([])
+  const [selectedPost, setSelectedPost] =useState('')
+  const [isModalActive, setIsModalActive] =useState(false)
+  const [checkedMessage, setСheckedMessage] =useState('')
 
-function App() {
-
-  const [title,setTitle] = useState('')
-  const [message,setMessage] = useState('')
-  const [posts,setPosts]=useState([{id:Date.now()}])
-  const [validationErrorTitle,setValidationErrorTitle]=useState('true')
-  const [validationErrorMessage,setValidationErrorMessage]=useState('true')
-
-  const onChangeTitle =(event)=>{  
-    const { value } =event.target
-    if (value.length>=6 || value.length===0 ){      
-      setValidationErrorTitle('false')      
-    }else if (value.length<6){
-      setValidationErrorTitle('true')     
-    }
-    setTitle(value)  
+  const addPost = (post) =>{
+    setPosts([...posts, post])
+    setIsModalActive(false)
   }
 
-  const onChangeMessage =(event)=>{  
-    const { value } =event.target
-    if (value.length>=16 || value.length===0){      
-      setValidationErrorMessage('false')      
-    }else if (value.length<16){
-      setValidationErrorMessage('true')  
-    }
-    setMessage(value)
+  const onClickDelete=(id)=>{
+    let array=posts.filter((post) => post.id !== id)
+    setPosts(array);   
   }
 
-  const onSubmitPost =(event)=>{
-    event.preventDefault()
-    if (validationErrorTitle==='true' 
-    && validationErrorMessage ==='true'
-    && title!==''
-    &&message!==''){
+  const onChangeSelect=(sortValue)=>{
+        setSelectedPost(sortValue)
+        let newPosts=[...posts].sort((a,b)=>a[sortValue].localeCompare(b[sortValue]))
+        setPosts(newPosts)
+  }
 
-      const post={
-        id: Date.now(),
-        title:title,
-        message:message
-      }
-    
-      setPosts([...posts, post])
-      setTitle('')  
-      setMessage('')
-    }     
-    
+    const showChekedMessage=(message)=>{  
+    setСheckedMessage(message)  
   }
 
   return (
     <div className="App">
-      <div className="container">
-        <form noValidate>
-          <h2>Создайте свой пост</h2>
-          <label htmlFor="title">Заголовок поста</label>
-          <MyInput type="text"   
-          id="title"            
-          placeholder="Введите заголовок поста"
-          value= { title }
-          onChange={ onChangeTitle }/>
-          <span className={validationErrorTitle}>Колл-во символов от 1 до 5.</span>
+      <div className="container">      
+        <div className="formCreate">
+          <h1>Нажмите на кнопку, чтобы создать пост</h1>
+          <MyButton onClick={()=>setIsModalActive(true)}>Создать пост</MyButton>
+          
+          <div className="sortPost">
+            <p>Сортируйте свои посты:</p>
+            <div>
+            <Select defaultValue="Сортировать по"
+                    options={[
+                    {value: "title", name: "По названию"},
+                    {value: "message", name: "По описанию"}
+                    ]}
+                    value={selectedPost}
+                    onChangeSelect={onChangeSelect}
+            />
+            </div>                        
+          </div>              
+        </div>
 
-          <label htmlFor="message">Cообщение</label>
-          <MyInput type="text"
-          id="message"        
-          placeholder="Введите сообщение"
-          value= { message }
-          onChange={ onChangeMessage }/>
-          <span className={validationErrorMessage}>Колл-во символов от 1 до 15.</span>
-
-          <MyButton onClick={ onSubmitPost } type="submit">Добавить</MyButton>
-        </form>     
-        <ul>{posts.map((post) => (        
-          <Post key={ post.id } post={post}/>      
-        ))}
-        </ul> 
-      </div>            
+        <div className="checkedMessage">{checkedMessage}</div> 
+        
+        <Modal visible={isModalActive} setVisible={setIsModalActive}>
+        <Form addPost={addPost}/>
+        </Modal>
+        
+      
+        {posts.length !==0
+        ?<Posts posts={posts} onClickDelete={onClickDelete} showChekedMessage={showChekedMessage}/>
+        :<h2>Список пуст</h2>
+        }        
+       </div>            
     </div>
   );
 }
